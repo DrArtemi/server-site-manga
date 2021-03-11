@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jsonwebtoken = require('jsonwebtoken');
 const models = require('../models');
+const { Op } = require('sequelize');
 
 const resolvers = {
     Query: {
@@ -26,20 +27,29 @@ const resolvers = {
         }
     },
     Mutation: {
-        async registerUser(root, { username, email, password }) {
+        async registerUser(root, { pseudo, email, password }) {
             try {
-                const user = await models.User.create({
-                    username,
-                    email,
-                    password: await bcrypt.hash(password, 10)
+                const [user, created] = await models.User.findOrCreate({
+                    where: {
+                        [Op.or]: [
+                            { pseudo: pseudo },
+                            { email: email },
+                        ]
+                    },
+                    defaults: {
+                        pseudo: pseudo,
+                        email: email,
+                        password: await bcrypt.hash(password, 10)
+                    }
                 })
+                if (!created) throw new Error('Pseudo or email already exist')
                 const token = jsonwebtoken.sign(
                     { id: user.id, email: user.email},
                     process.env.JWT_SECRET,
                     { expiresIn: '1y' }
                 )
                 return {
-                    token, id: user.id, username: user.username, email: user.email, message: "Authentication successful"
+                    token, id: user.id, pseudo: user.pseudo, email: user.email, message: "Authentication successful"
                 }
             } catch (error) {
                 throw new Error(error.message)
