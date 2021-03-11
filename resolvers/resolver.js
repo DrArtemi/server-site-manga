@@ -42,14 +42,27 @@ const resolvers = {
                         password: await bcrypt.hash(password, 10)
                     }
                 })
-                if (!created) throw new Error('Pseudo or email already exist')
-                const token = jsonwebtoken.sign(
+                console.log(user, created);
+                let token = ''
+                if (!created) {
+                    let field = "unknown"
+                    if (user.pseudo === pseudo)
+                        field = "pseudo"
+                    else if (user.email === email)
+                        field = "email"
+                    return {
+                        token,
+                        status: "error",
+                        message: field + " already exists"
+                    }
+                }
+                token = jsonwebtoken.sign(
                     { id: user.id, email: user.email},
                     process.env.JWT_SECRET,
                     { expiresIn: '1y' }
                 )
                 return {
-                    token, id: user.id, pseudo: user.pseudo, email: user.email, message: "Authentication successful"
+                    token, status: "success", message: "Authentication successful"
                 }
             } catch (error) {
                 throw new Error(error.message)

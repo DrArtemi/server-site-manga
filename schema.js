@@ -8,7 +8,8 @@ const typeDefs = gql`
   }
   type AuthPayload {
     token: String!
-    user: User!
+    status: String!
+    message: String!
   }
   type Query {
     user(id: Int!): User
