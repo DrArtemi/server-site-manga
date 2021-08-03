@@ -1,7 +1,8 @@
 const { ApolloServer } = require('apollo-server');
 const jwt = require('jsonwebtoken');
-const typeDefs = require('./schema');
-const resolvers = require('./resolvers/resolver');
+const { typeDefs, resolvers } = require('./schema');
+// const typeDefs = require('./schema');
+// const resolvers = require('./resolvers/resolver');
 require('dotenv').config()
 
 

@@ -1,7 +1,7 @@
 module.exports = {
     "development": {
         "dialect": "sqlite",
-        "storage": "./database.sqlite3"
+        "storage": "/home/adrien/manga_dbs/site_manga.db"
     },
     "test": {
         "dialect": "sqlite",
