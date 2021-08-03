@@ -42,7 +42,6 @@ const resolvers = {
                         password: await bcrypt.hash(password, 10)
                     }
                 })
-                console.log(user, created);
                 let token = ''
                 if (!created) {
                     let field = "unknown"
