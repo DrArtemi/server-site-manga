@@ -45,9 +45,16 @@ const queries = {
             throw new Error(error.message);
         }
     },
-    async allChapters(root, args) {
+    async allChapters(root, { first }) {
         try {
-            return models.Chapter.findAll({ include: { model: models.Manga, as: 'manga' } });
+            return models.Chapter.findAll({
+                limit: first,
+                order: [
+                    ['date', 'DESC'],
+                    ['number', 'DESC']
+                ],
+                include: { model: models.Manga, as: 'manga' }
+            });
         } catch (error) {
             throw new Error(error.message);
         }
