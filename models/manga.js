@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Manga.hasMany(models.Chapter, { foreignKey: 'manga_id', as: 'chapters' });
     }
   };
   Manga.init({
@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     cover_url: DataTypes.STRING(150),
   }, {
     sequelize,
-    modelName: 'manga',
+    modelName: 'Manga',
     timestamps: false
   });
   return Manga;

@@ -3,14 +3,19 @@ const models = require('../../models');
 const queries = {
     async manga(root, { id }) {
         try {
-            return models.manga.findByPk(id);
+            return models.Manga.findOne({
+                where: {
+                    id: id
+                },
+                include: { model: models.Chapter, as: 'chapters' }
+            });
         } catch (error) {
             throw new Error(error.message);
         }
     },
     async allMangas(root, args) {
         try {
-            return models.manga.findAll();
+            return models.Manga.findAll();
         } catch (error) {
             throw new Error(error.message);
         }
@@ -18,17 +23,23 @@ const queries = {
 
     async chapter(root, { id }) {
         try {
-            return models.chapter.findByPk(id);
+            return models.Chapter.findOne({
+                where: {
+                    id: id
+                },
+                include: { model: models.Manga, as: 'manga' }
+            });
         } catch (error) {
             throw new Error(error.message);
         }
     },
     async mangaChapters(root, { manga_id }) {
         try {
-            return models.chapter.findAll({
+            return models.Chapter.findAll({
                 where: {
                     manga_id: manga_id
-                }
+                },
+                include: { model: models.Manga, as: 'manga' }
             });
         } catch (error) {
             throw new Error(error.message);
@@ -36,7 +47,7 @@ const queries = {
     },
     async allChapters(root, args) {
         try {
-            return models.chapter.findAll();
+            return models.Chapter.findAll({ include: { model: models.Manga, as: 'manga' } });
         } catch (error) {
             throw new Error(error.message);
         }

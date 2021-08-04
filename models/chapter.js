@@ -10,12 +10,12 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Chapter.belongsTo(models.Manga, { foreignKey: 'manga_id', as: 'manga' });
     }
   };
   Chapter.init({
     number: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false
     },
     title: {
@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    modelName: 'chapter',
+    modelName: 'Chapter',
     timestamps: false
   });
   return Chapter;
