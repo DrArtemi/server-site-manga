@@ -16,6 +16,7 @@ const getUser = token => {
 }
 
 const server = new ApolloServer({
+    cors: true,
     typeDefs,
     resolvers,
     context: ({ req }) => {
