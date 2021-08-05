@@ -9,6 +9,6 @@ module.exports = {
     },
     "production": {
         "dialect": "sqlite",
-        "storage": "/home/adrien/manga_dbs/site_manga.db"
+        "storage": "/home/ubuntu/databases/fuckjapscan.db"
     }
 }
