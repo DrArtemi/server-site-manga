@@ -1,7 +1,9 @@
-const models = require('../../models');
+const models  = require('../../models');
+// const { sequelize } = require('../../models/index')
 
 const queries = {
-    async manga(root, { id }) {
+    async manga(root, args, context, info) {
+        const { id } = args;
         try {
             return models.Manga.findOne({
                 where: {
@@ -13,15 +15,21 @@ const queries = {
             throw new Error(error.message);
         }
     },
-    async allMangas(root, args) {
+    async allMangas(root, args, context, info) {
+        const { searchText } = args;
         try {
-            return models.Manga.findAll();
+            return models.Manga.findAll({
+                where: {
+                    title$: models.sequelize.where(models.sequelize.fn('LOWER', models.sequelize.col('title')), 'LIKE', '%' + searchText + '%'),
+                },
+            });
         } catch (error) {
             throw new Error(error.message);
         }
     },
 
-    async chapter(root, { id }) {
+    async chapter(root, args, context, info) {
+        const { id } = args;
         try {
             return models.Chapter.findOne({
                 where: {
@@ -33,7 +41,8 @@ const queries = {
             throw new Error(error.message);
         }
     },
-    async mangaChapters(root, { manga_id }) {
+    async mangaChapters(root, args, context, info) {
+        const { manga_id } = args;
         try {
             return models.Chapter.findAll({
                 where: {
@@ -45,15 +54,22 @@ const queries = {
             throw new Error(error.message);
         }
     },
-    async allChapters(root, { first }) {
+    async allChapters(root, args, context, info) {
+        const { first, searchText } = args;
         try {
             return models.Chapter.findAll({
+                include: { 
+                    model: models.Manga,
+                    as: 'manga'
+                },
                 limit: first,
+                where: {
+                    '$manga.title$': models.sequelize.where(models.sequelize.fn('LOWER', models.sequelize.col('manga.title')), 'LIKE', '%' + searchText + '%'),
+                },
                 order: [
                     ['date', 'DESC'],
                     ['number', 'DESC']
                 ],
-                include: { model: models.Manga, as: 'manga' }
             });
         } catch (error) {
             throw new Error(error.message);

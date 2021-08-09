@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server');
+const { gql } = require('apollo-server-express');
 
 const { typeDefs: authTypeDefs } = require('./schemas/auth/types');
 const { queries: authQueries } = require('./schemas/auth/queries');
@@ -17,11 +17,11 @@ const typeDefs = gql`
     me: User
 
     manga(id: Int!): Manga
-    allMangas: [Manga!]!
+    allMangas(searchText: String = ""): [Manga!]!
 
     chapter(id: Int!): Chapter
     mangaChapters(manga_id: Int!): [Chapter!]!
-    allChapters(first: Int!): [Chapter!]!
+    allChapters(first: Int = 50, searchText: String = ""): [Chapter!]!
   }
   type Mutation {
     registerUser(pseudo: String, email: String!, password: String!): AuthPayload!
