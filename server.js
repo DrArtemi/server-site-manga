@@ -10,7 +10,7 @@ require('dotenv').config()
 
 async function startApolloServer() {
   const configurations = {
-    production: { ssl: true, port: 443, hostname: 'localhost' },
+    production: { ssl: true, port: 8443, hostname: 'localhost' },
     development: { ssl: false, port: process.env.PORT || 8000, hostname: 'localhost' },
   };
   const environment = process.env.NODE_ENV || 'production';
