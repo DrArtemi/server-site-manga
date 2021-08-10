@@ -5,6 +5,7 @@ const typeDefs = gql`
         id: Int
         title: String
         team: String
+        url: String
         cover_checksum: String
         cover_path: String
         chapters: [Chapter]

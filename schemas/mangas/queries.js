@@ -1,3 +1,4 @@
+const { sequelize } = require('../../models');
 const models  = require('../../models');
 // const { sequelize } = require('../../models/index')
 
@@ -22,6 +23,7 @@ const queries = {
                 where: {
                     title$: models.sequelize.where(models.sequelize.fn('LOWER', models.sequelize.col('title')), 'LIKE', '%' + searchText + '%'),
                 },
+                order: sequelize.random()
             });
         } catch (error) {
             throw new Error(error.message);
