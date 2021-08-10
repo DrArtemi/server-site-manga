@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(50),
       allowNull: false
     },
+    url: DataTypes.STRING(150),
     cover_checksum: DataTypes.STRING(150),
     cover_path: DataTypes.STRING(150),
     cover_url: DataTypes.STRING(150),
