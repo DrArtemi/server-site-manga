@@ -17,12 +17,13 @@ const queries = {
         }
     },
     async allMangas(root, args, context, info) {
-        const { searchText } = args;
+        const { first, searchText } = args;
         try {
             return models.Manga.findAll({
                 where: {
                     title$: models.sequelize.where(models.sequelize.fn('LOWER', models.sequelize.col('title')), 'LIKE', '%' + searchText + '%'),
                 },
+                limit: first,
                 order: sequelize.random()
             });
         } catch (error) {
@@ -64,10 +65,10 @@ const queries = {
                     model: models.Manga,
                     as: 'manga'
                 },
-                limit: first,
                 where: {
                     '$manga.title$': models.sequelize.where(models.sequelize.fn('LOWER', models.sequelize.col('manga.title')), 'LIKE', '%' + searchText + '%'),
                 },
+                limit: first,
                 order: [
                     ['date', 'DESC'],
                     ['number', 'DESC']

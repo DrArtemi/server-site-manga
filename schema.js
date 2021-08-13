@@ -17,7 +17,7 @@ const typeDefs = gql`
     me: User
 
     manga(id: Int!): Manga
-    allMangas(searchText: String = ""): [Manga!]!
+    allMangas(first: Int = 50, searchText: String = ""): [Manga!]!
 
     chapter(id: Int!): Chapter
     mangaChapters(manga_id: Int!): [Chapter!]!
