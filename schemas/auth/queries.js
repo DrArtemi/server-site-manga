@@ -2,8 +2,17 @@ const models = require('../../models');
 
 const queries = {
     async me(_, args, { user }) {
-        if(!user) throw new Error('You are not authenticated')
-        return await models.User.findByPk(user.id)
+        try {
+            if(!user) throw new Error('You are not authenticated')
+            return models.User.findOne({
+                where: {
+                    id: user.id
+                },
+                include: [{ model: models.Manga, as: 'mangas' }]
+            });
+        } catch (error) {
+            throw new Error(error.message)
+        }
     },
     async user(root, { id }, { user }) {
         try {
