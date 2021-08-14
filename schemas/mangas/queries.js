@@ -1,6 +1,6 @@
+const Sequelize = require('sequelize');
 const { sequelize } = require('../../models');
 const models  = require('../../models');
-// const { sequelize } = require('../../models/index')
 
 const queries = {
     async manga(root, args, context, info) {
@@ -52,6 +52,29 @@ const queries = {
                     manga_id: manga_id
                 },
                 include: { model: models.Manga, as: 'manga' }
+            });
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    },
+    async userChapters(root, args, context, info) {
+        const { mangaIds, searchText } = args;
+        try {
+            return models.Chapter.findAll({
+                include: { 
+                    model: models.Manga,
+                    as: 'manga'
+                },
+                where: {
+                    '$manga.title$': models.sequelize.where(models.sequelize.fn('LOWER', models.sequelize.col('manga.title')), 'LIKE', '%' + searchText + '%'),
+                    manga_id: {
+                        [Sequelize.Op.in]: mangaIds
+                    }
+                },
+                order: [
+                    ['date', 'DESC'],
+                    ['number', 'DESC']
+                ],
             });
         } catch (error) {
             throw new Error(error.message);

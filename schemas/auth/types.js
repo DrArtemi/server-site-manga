@@ -5,10 +5,15 @@ const typeDefs = gql`
         id: Int!
         pseudo: String
         email: String!
+        mangas: [Manga]
     }
     type AuthPayload {
         token: String!
         status: String!
+        message: String!
+    }
+    type LikePayload {
+        success: Boolean!
         message: String!
     }
 `;

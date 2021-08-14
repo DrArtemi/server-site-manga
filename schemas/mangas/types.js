@@ -9,6 +9,7 @@ const typeDefs = gql`
         cover_checksum: String
         cover_path: String
         chapters: [Chapter]
+        users: [User]
     }
     type Chapter {
         id: Int

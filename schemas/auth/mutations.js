@@ -62,12 +62,60 @@ const mutations = {
                 { expiresIn: '1d'}
             )
             return {
-                token, user
+                token,
+                status: "success",
+                message: "Authentication successful"
             }
         } catch (error) {
             throw new Error(error.message)
         }
-    }
+    },
+    async like(root, args, context, info) {
+        const { manga_id } = args;
+        const { user } = context;
+        try {
+            if(!user) throw new Error('You are not authenticated!');
+            let user_model = await models.User.findByPk(user.id);
+            let manga = await models.Manga.findOne({ where: { id: manga_id } });
+            if (manga) {
+                await user_model.addManga(manga);
+                return {
+                    success: true,
+                    message: "Manga successfully liked."
+                }
+            } else {
+                return {
+                    success: false,
+                    message: "Liked manga not found."
+                }
+            }            
+        } catch (error) {
+            throw new Error(error.message)
+        }
+    },
+    async unlike(root, args, context, info) {
+        const { manga_id } = args;
+        const { user } = context;
+        try {
+            if(!user) throw new Error('You are not authenticated!');
+            let user_model = await models.User.findByPk(user.id);
+            let manga = await models.Manga.findOne({ where: { id: manga_id } });
+            if (manga) {
+                await user_model.removeManga(manga);
+                return {
+                    success: true,
+                    message: "Manga successfully unliked."
+                }
+            } else {
+                return {
+                    success: false,
+                    message: "Unliked manga not found."
+                }
+            }            
+        } catch (error) {
+            throw new Error(error.message)
+        }
+    },
 };
 
 module.exports.mutations = mutations;
