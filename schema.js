@@ -21,7 +21,7 @@ const typeDefs = gql`
 
     chapter(id: Int!): Chapter
     mangaChapters(manga_id: Int!): [Chapter!]!
-    userChapters(mangaIds: [Int!]!, searchText: String = ""): [Chapter!]!
+    userChapters(first: Int = 50, mangaIds: [Int!]!, searchText: String = ""): [Chapter!]!
     allChapters(first: Int = 50, searchText: String = ""): [Chapter!]!
   }
   type Mutation {

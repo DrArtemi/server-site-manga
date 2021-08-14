@@ -58,7 +58,7 @@ const queries = {
         }
     },
     async userChapters(root, args, context, info) {
-        const { mangaIds, searchText } = args;
+        const { first, mangaIds, searchText } = args;
         try {
             return models.Chapter.findAll({
                 include: { 
@@ -71,6 +71,7 @@ const queries = {
                         [Sequelize.Op.in]: mangaIds
                     }
                 },
+                limit: first,
                 order: [
                     ['date', 'DESC'],
                     ['number', 'DESC']
