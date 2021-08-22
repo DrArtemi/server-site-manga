@@ -22,7 +22,7 @@ async function startApolloServer() {
       console.log(token);
       if (token) {
         //! This is a quick and dirty fix to a bug where token is
-        //! received 2 times separated by a comma...
+        //! received 2 times separated by a comma on some browsers...
         if (token.includes(','))
           token = token.split(',')[1].trim()
         return jwt.verify(token, process.env.JWT_SECRET)

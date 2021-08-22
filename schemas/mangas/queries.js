@@ -82,7 +82,7 @@ const queries = {
         }
     },
     async allChapters(root, args, context, info) {
-        const { first, searchText } = args;
+        const { first, mangaIds, searchText } = args;
         try {
             return models.Chapter.findAll({
                 include: { 
@@ -91,6 +91,9 @@ const queries = {
                 },
                 where: {
                     '$manga.title$': models.sequelize.where(models.sequelize.fn('LOWER', models.sequelize.col('manga.title')), 'LIKE', '%' + searchText + '%'),
+                    manga_id: {
+                        [Sequelize.Op.notIn]: mangaIds
+                    }
                 },
                 limit: first,
                 order: [

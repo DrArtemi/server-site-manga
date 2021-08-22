@@ -22,7 +22,7 @@ const typeDefs = gql`
     chapter(id: Int!): Chapter
     mangaChapters(manga_id: Int!): [Chapter!]!
     userChapters(first: Int = 50, mangaIds: [Int!]!, searchText: String = ""): [Chapter!]!
-    allChapters(first: Int = 50, searchText: String = ""): [Chapter!]!
+    allChapters(first: Int = 50, mangaIds: [Int]!, searchText: String = ""): [Chapter!]!
   }
   type Mutation {
     registerUser(pseudo: String, email: String!, password: String!): AuthPayload!
