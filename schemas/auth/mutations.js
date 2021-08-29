@@ -2,11 +2,26 @@ const bcrypt = require('bcrypt');
 const jsonwebtoken = require('jsonwebtoken');
 const models = require('../../models');
 const { Op } = require('sequelize');
+const passwordValidator = require('password-validator');
 
+var schema = new passwordValidator();
+schema
+.is().min(8)
+.is().max(100)
+.has().not().spaces();
 
 const mutations = {
     async registerUser(root, { pseudo, email, password }) {
         try {
+            let token = '';
+            let passResult = schema.validate(password, { list: true });
+            if (passResult.length > 0) {
+                return {
+                    token,
+                    status: "failure",
+                    message: "password:" + "Mot de passe non valide (min 8 charactères)."
+                }
+            }
             const [user, created] = await models.User.findOrCreate({
                 where: {
                     [Op.or]: [
@@ -20,17 +35,16 @@ const mutations = {
                     password: await bcrypt.hash(password, 10)
                 }
             })
-            let token = ''
             if (!created) {
                 let field = "unknown"
                 if (user.pseudo === pseudo)
                     field = "pseudo"
                 else if (user.email === email)
-                    field = "email"
+                    field = "mail"
                 return {
                     token,
-                    status: "error",
-                    message: field + " already exists"
+                    status: "failure",
+                    message: field + ":" + field + " déjà utilisé."
                 }
             }
             token = jsonwebtoken.sign(
@@ -49,11 +63,19 @@ const mutations = {
         try {
             const user = await models.User.findOne({ where: { email }})
             if (!user) {
-                throw new Error('No user with that email')
+                return {
+                    token: "",
+                    status: "failure",
+                    message: "mail:Aucun utilisateur enregistré avec cet email."
+                }
             }
             const isValid = await bcrypt.compare(password, user.password)
             if (!isValid) {
-                throw new Error('Incorrect password')
+                return {
+                    token: "",
+                    status: "failure",
+                    message: "password:Mot de passe invalide."
+                }
             }
             // return jwt
             const token = jsonwebtoken.sign(
