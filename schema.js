@@ -17,12 +17,14 @@ const typeDefs = gql`
     me: User
 
     manga(id: Int!): Manga
-    allMangas(first: Int = 50, searchText: String = ""): [Manga!]!
+    allMangas(first: Int = 50, searchText: String = "", langage : [String] = ["fr"]): [Manga!]!
 
     chapter(id: Int!): Chapter
     mangaChapters(manga_id: Int!): [Chapter!]!
-    userChapters(first: Int = 50, mangaIds: [Int!]!, searchText: String = ""): [Chapter!]!
-    allChapters(first: Int = 50, mangaIds: [Int]!, searchText: String = ""): [Chapter!]!
+    userChapters(first: Int = 50, mangaIds: [Int!]!, searchText: String = "", langage : [String] = ["fr"]): [Chapter!]!
+    allChapters(first: Int = 50, mangaIds: [Int]!, searchText: String = "", langage : [String] = ["fr"]): [Chapter!]!
+
+    allTeams(langage : [String] = ["fr"]): [Team!]!
   }
   type Mutation {
     registerUser(pseudo: String, email: String!, password: String!): AuthPayload!

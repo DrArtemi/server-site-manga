@@ -11,15 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Manga.hasMany(models.Chapter, { foreignKey: 'manga_id', as: 'chapters' });
-      Manga.belongsToMany(models.User, { through: 'UserMangas' });
+      Manga.belongsToMany(models.User, { through: 'UserMangas', as: 'users' });
+      Manga.belongsToMany(models.Team, { through: 'MangaTeam', foreignKey: 'manga_id', as: 'teams' });
     }
   };
   Manga.init({
     title: {
-      type: DataTypes.STRING(50),
-      allowNull: false
-    },
-    team: {
       type: DataTypes.STRING(50),
       allowNull: false
     },
