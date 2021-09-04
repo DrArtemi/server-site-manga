@@ -17,12 +17,12 @@ const typeDefs = gql`
     me: User
 
     manga(id: Int!): Manga
-    allMangas(first: Int = 50, searchText: String = "", langage : [String] = ["fr"]): [Manga!]!
+    allMangas(first: Int = 50, searchText: String = "", langage : [String] = [], team : [String] = []): [Manga!]!
 
     chapter(id: Int!): Chapter
     mangaChapters(manga_id: Int!): [Chapter!]!
-    userChapters(first: Int = 50, mangaIds: [Int!]!, searchText: String = "", langage : [String] = ["fr"]): [Chapter!]!
-    allChapters(first: Int = 50, mangaIds: [Int]!, searchText: String = "", langage : [String] = ["fr"]): [Chapter!]!
+    userChapters(first: Int = 50, mangaIds: [Int!]!, searchText: String = "", langage : [String] = [], team : [String] = []): [Chapter!]!
+    allChapters(first: Int = 50, mangaIds: [Int]!, searchText: String = "", langage : [String] = [], team : [String] = []): [Chapter!]!
 
     allTeams(langage : [String] = ["fr"]): [Team!]!
   }

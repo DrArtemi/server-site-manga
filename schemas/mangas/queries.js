@@ -17,12 +17,13 @@ const queries = {
         }
     },
     async allMangas(root, args, context, info) {
-        const { first, searchText, langage } = args;
+        const { first, searchText, langage, team } = args;
         try {
             return models.Manga.findAll({
                 where: {
                     title$: models.sequelize.where(models.sequelize.fn('LOWER', models.sequelize.col('title')), 'LIKE', '%' + searchText + '%'),
                     '$teams.langage$': { [Sequelize.Op.in]: langage },
+                    '$teams.name$': { [Sequelize.Op.in]: team },
                 },
                 include: [
                     { 
@@ -66,12 +67,13 @@ const queries = {
         }
     },
     async userChapters(root, args, context, info) {
-        const { first, mangaIds, searchText, langage } = args;
+        const { first, mangaIds, searchText, langage, team } = args;
         try {
             return models.Chapter.findAll({
                 where: {
                     '$manga.title$': models.sequelize.where(models.sequelize.fn('LOWER', models.sequelize.col('manga.title')), 'LIKE', '%' + searchText + '%'),
                     '$teams.langage$': { [Sequelize.Op.in]: langage },
+                    '$teams.name$': { [Sequelize.Op.in]: team },
                     manga_id: {
                         [Sequelize.Op.in]: mangaIds
                     }
@@ -98,12 +100,13 @@ const queries = {
         }
     },
     async allChapters(root, args, context, info) {
-        const { first, mangaIds, searchText, langage } = args;
+        const { first, mangaIds, searchText, langage, team } = args;
         try {
             return models.Chapter.findAll({
                 where: {
                     '$manga.title$': models.sequelize.where(models.sequelize.fn('LOWER', models.sequelize.col('manga.title')), 'LIKE', '%' + searchText + '%'),
                     '$teams.langage$': { [Sequelize.Op.in]: langage },
+                    '$teams.name$': { [Sequelize.Op.in]: team },
                     manga_id: {
                         [Sequelize.Op.notIn]: mangaIds
                     }
