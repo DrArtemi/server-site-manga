@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Chapter.belongsTo(models.Manga, { foreignKey: 'manga_id', as: 'manga' });
+      Chapter.belongsToMany(models.Team, { through: 'ChapterTeam', foreignKey: 'chapter_id', as: 'teams' });
     }
   };
   Chapter.init({

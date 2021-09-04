@@ -19,7 +19,6 @@ async function startApolloServer() {
 
   const getUser = token => {
     try {
-      console.log(token);
       if (token) {
         //! This is a quick and dirty fix to a bug where token is
         //! received 2 times separated by a comma on some browsers...
@@ -27,7 +26,6 @@ async function startApolloServer() {
           token = token.split(',')[1].trim()
         return jwt.verify(token, process.env.JWT_SECRET)
       }
-      console.log('Out token !')
       return null
     } catch (error) {
       console.log('Error token !', error)

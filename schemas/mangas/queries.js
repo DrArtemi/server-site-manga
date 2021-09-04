@@ -17,14 +17,23 @@ const queries = {
         }
     },
     async allMangas(root, args, context, info) {
-        const { first, searchText } = args;
+        const { first, searchText, langage, team } = args;
         try {
             return models.Manga.findAll({
                 where: {
                     title$: models.sequelize.where(models.sequelize.fn('LOWER', models.sequelize.col('title')), 'LIKE', '%' + searchText + '%'),
+                    '$teams.langage$': { [Sequelize.Op.in]: langage },
+                    '$teams.name$': { [Sequelize.Op.in]: team },
                 },
+                include: [
+                    { 
+                        model: models.Team,
+                        as: 'teams'
+                    }
+                ],
                 limit: first,
-                order: sequelize.random()
+                order: sequelize.random(),
+                subQuery: false
             });
         } catch (error) {
             throw new Error(error.message);
@@ -58,53 +67,87 @@ const queries = {
         }
     },
     async userChapters(root, args, context, info) {
-        const { first, mangaIds, searchText } = args;
+        const { first, mangaIds, searchText, langage, team } = args;
         try {
             return models.Chapter.findAll({
-                include: { 
-                    model: models.Manga,
-                    as: 'manga'
-                },
                 where: {
                     '$manga.title$': models.sequelize.where(models.sequelize.fn('LOWER', models.sequelize.col('manga.title')), 'LIKE', '%' + searchText + '%'),
+                    '$teams.langage$': { [Sequelize.Op.in]: langage },
+                    '$teams.name$': { [Sequelize.Op.in]: team },
                     manga_id: {
                         [Sequelize.Op.in]: mangaIds
                     }
                 },
+                include: [
+                    { 
+                        model: models.Manga,
+                        as: 'manga'
+                    },
+                    { 
+                        model: models.Team,
+                        as: 'teams'
+                    }
+                ],
                 limit: first,
                 order: [
                     ['date', 'DESC'],
                     ['number', 'DESC']
                 ],
+                subQuery: false
             });
         } catch (error) {
             throw new Error(error.message);
         }
     },
     async allChapters(root, args, context, info) {
-        const { first, mangaIds, searchText } = args;
+        const { first, mangaIds, searchText, langage, team } = args;
         try {
             return models.Chapter.findAll({
-                include: { 
-                    model: models.Manga,
-                    as: 'manga'
-                },
                 where: {
                     '$manga.title$': models.sequelize.where(models.sequelize.fn('LOWER', models.sequelize.col('manga.title')), 'LIKE', '%' + searchText + '%'),
+                    '$teams.langage$': { [Sequelize.Op.in]: langage },
+                    '$teams.name$': { [Sequelize.Op.in]: team },
                     manga_id: {
                         [Sequelize.Op.notIn]: mangaIds
                     }
                 },
+                include: [
+                    { 
+                        model: models.Manga,
+                        as: 'manga'
+                    },
+                    { 
+                        model: models.Team,
+                        as: 'teams'
+                    }
+                ],
                 limit: first,
                 order: [
                     ['date', 'DESC'],
                     ['number', 'DESC']
                 ],
+                subQuery: false
             });
         } catch (error) {
             throw new Error(error.message);
         }
-    }
+    },
+
+    async allTeams(root, args, context, info) {
+        const { langage } = args;
+        try {
+            return models.Team.findAll({
+                where: {
+                    langage: { [Sequelize.Op.in]: langage },
+                },
+                order: [
+                    ['name', 'ASC']
+                ],
+            });
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    },
 };
 
 module.exports.queries = queries;
